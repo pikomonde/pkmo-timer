@@ -134,7 +134,7 @@ const Timer = React.memo(function Timer({
   )
 });
 
-function Timers({ timers, setTimers }) {
+function Timers({ timers, setTimers, audioRefs }) {
 
   const onCreate = React.useCallback(() => {
     const timer = newTimer();
@@ -235,6 +235,11 @@ function Timers({ timers, setTimers }) {
   }, [setTimers]);
 
   const onDelete = React.useCallback((id) => {
+    if (audioRefs.current[id]) {
+      audioRefs.current[id].pause();
+      audioRefs.current[id].currentTime = 0;
+      delete audioRefs.current[id];
+    }
     setTimers(prev => {
       const { [id]: _, ...remainingById } = prev.byId;
       const newAllIds = prev.allIds.filter(activeId => activeId !== id);
@@ -246,7 +251,7 @@ function Timers({ timers, setTimers }) {
         editingTimer: newEditingTimer(),
       }
     });
-  }, [setTimers]);
+  }, [setTimers, audioRefs]);
 
   const onStartTimer = React.useCallback((id) => {
     setTimers(prev => {
@@ -269,6 +274,11 @@ function Timers({ timers, setTimers }) {
   }, [setTimers]);
 
   const onStopTimer = React.useCallback((id) => {
+    if (audioRefs.current[id]) {
+      audioRefs.current[id].pause();
+      audioRefs.current[id].currentTime = 0;
+      delete audioRefs.current[id];
+    }
     setTimers(prev => {
       return {
         ...prev,
@@ -282,7 +292,7 @@ function Timers({ timers, setTimers }) {
         },
       }
     });
-  }, [setTimers]);
+  }, [setTimers, audioRefs]);
 
   const callbackActions = React.useMemo(() => ({
     onUpdate, onEdit, onChange, onDelete, onStartTimer, onStopTimer
@@ -346,6 +356,7 @@ function App() {
   };
 
   const [timers, setTimers] = React.useState(exampleListOfTimers);
+  const audioRefs = React.useRef({});
   React.useEffect(() => {
     const tick = setInterval(() => {
       setTimers(prev => {
@@ -365,9 +376,13 @@ function App() {
                 notifyAt: 0,
                 runSecondsLeft: 0,
               };
-              // TODO: move to binary files or hex
-              const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
-              alarmSound.play().catch((error) => {console.log(`Audio playbak failed: ${error.name} ${error.message}`)});
+              if (!audioRefs.current[id]) {
+                // TODO: move to binary files or hex
+                const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
+                alarmSound.loop = true;
+                alarmSound.play().catch((error) => {console.log(`Audio playbak failed: ${error.name} ${error.message}`)});
+                audioRefs.current[id] = alarmSound;
+              }
             } else {
               updatedTimers[id] = {
                 ...timer,
@@ -394,6 +409,7 @@ function App() {
       <Timers
         timers={timers}
         setTimers={setTimers}
+        audioRefs={audioRefs}
       />
     </>
   );
