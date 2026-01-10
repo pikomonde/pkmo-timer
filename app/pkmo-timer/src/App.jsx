@@ -296,7 +296,7 @@ function Timers({ timers, setTimers }) {
             key={id}
             id={id}
             timer={timers.byId[id]}
-            editingTimer={isEditingThisOne ? timers.editingTimer: null}
+            editingTimer={isEditingThisOne ? timers.editingTimer: undefined}
             isOtherTimerEdited={isOtherTimerEdited}
           />
         })}
