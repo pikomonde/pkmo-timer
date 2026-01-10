@@ -359,8 +359,12 @@ function App() {
     const tick = setInterval(() => {
       setTimers(prev => {
         const now = Date.now();
+        const runningIds = prev.allIds.filter(id => prev.byId[id].status === 'running');
+
+        if (runningIds.length === 0) return prev;
+
         const updatedTimers = {};
-        prev.allIds.map((id) => {
+        runningIds.forEach((id) => {
           const timer = prev.byId[id];
           if (timer.status === 'running') {
             if (now + timer.totalSeconds > timer.notifyAt) {
