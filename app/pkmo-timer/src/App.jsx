@@ -22,9 +22,17 @@ const Timer = React.memo(function Timer({
   const {hour: runHour, minute: runMinute, second: runSecond} = secondsToHMS(runSecondsLeft);
   const {onUpdate, onEdit, onDelete, onChange, onStartTimer, onStopTimer} = React.useContext(TimerCallbackActionsContext);
 
+  const nameInputRef = React.useRef(null);
+  React.useEffect(() => {
+    if (status === 'editing' && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [status]);
+
   return (
     <div className='timer-card'>
       <input
+        ref={nameInputRef}
         type='text'
         placeholder='Input timer name'
         disabled={status !== 'editing'}
