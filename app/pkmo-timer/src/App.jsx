@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css'
 
 const MS_IN_60_FPS = 1000 / 60;
+const TimerCallbackActionsContext = React.createContext(null);
 
 function secondsToHMS(seconds) {
   return {
@@ -16,15 +17,10 @@ const Timer = React.memo(function Timer({
   timer: {name, totalSeconds, status, runSecondsLeft},
   editingTimer = { name: '', hour: 0, minute: 0, second: 0 },
   isOtherTimerEdited,
-  onUpdate,
-  onEdit,
-  onDelete,
-  onChange,
-  onStartTimer,
-  onStopTimer,
 }) {
   const {hour, minute, second} = secondsToHMS(totalSeconds);
   const {hour: runHour, minute: runMinute, second: runSecond} = secondsToHMS(runSecondsLeft);
+  const {onUpdate, onEdit, onDelete, onChange, onStartTimer, onStopTimer} = React.useContext(TimerCallbackActionsContext);
 
   return (
     <div className='timer-card'>
@@ -286,31 +282,31 @@ function Timers({ timers, setTimers }) {
     });
   }, [setTimers]);
 
+  const callbackActions = React.useMemo(() => ({
+    onUpdate, onEdit, onChange, onDelete, onStartTimer, onStopTimer
+  }), [onUpdate, onEdit, onChange, onDelete, onStartTimer, onStopTimer]);
+
   return (
-    <div className='timers-container'>
-      {timers.allIds.map((id) => {
-        const isEditingThisOne = timers.byId[id].status === 'editing';
-        const isOtherTimerEdited = timers.editingTimer.isEditing;
-        return <Timer
-          key={id}
-          id={id}
-          timer={timers.byId[id]}
-          editingTimer={isEditingThisOne ? timers.editingTimer: null}
-          isOtherTimerEdited={isOtherTimerEdited}
-          onUpdate={onUpdate}
-          onEdit={onEdit}
-          onChange={onChange}
-          onDelete={onDelete}
-          onStartTimer={onStartTimer}
-          onStopTimer={onStopTimer}
-        />
-      })}
-      <button
-        className='timer-button-add'
-        onClick={onCreate}
-        disabled={timers.editingTimer.isEditing}
-      >Add New Timer</button>
-    </div>
+    <TimerCallbackActionsContext.Provider value={callbackActions}>
+      <div className='timers-container'>
+        {timers.allIds.map((id) => {
+          const isEditingThisOne = timers.byId[id].status === 'editing';
+          const isOtherTimerEdited = timers.editingTimer.isEditing;
+          return <Timer
+            key={id}
+            id={id}
+            timer={timers.byId[id]}
+            editingTimer={isEditingThisOne ? timers.editingTimer: null}
+            isOtherTimerEdited={isOtherTimerEdited}
+          />
+        })}
+        <button
+          className='timer-button-add'
+          onClick={onCreate}
+          disabled={timers.editingTimer.isEditing}
+        >Add New Timer</button>
+      </div>
+    </TimerCallbackActionsContext.Provider>
   )
 }
 
