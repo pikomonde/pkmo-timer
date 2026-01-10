@@ -22,12 +22,38 @@ const Timer = React.memo(function Timer({
   const hms = secondsToHMS(totalSeconds);
 
   const onChange = (event, fieldName) => {
+    let val = event.target.value;
+    switch (fieldName) {
+      case 'hour':
+        val = Math.floor(val)
+        if (val < 0) {
+          val = 0;
+        }
+        break;
+      case 'minute':
+        val = Math.floor(val)
+        if (val < 0) {
+          val = 0;
+        } else if (val > 59) {
+          val = 59;
+        }
+        break;
+      case 'second':
+        val = Math.floor(val)
+        if (val < 0) {
+          val = 0;
+        } else if (val > 59) {
+          val = 59;
+        }
+        break;
+    }
+
     setTimers(prev => {
       return {
         ...prev,
         editingTimer: {
           ...prev.editingTimer,
-          [fieldName]: event.target.value,
+          [fieldName]: val,
         },
       }
     });
