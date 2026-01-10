@@ -21,7 +21,7 @@ const Timer = React.memo(function Timer({
 }) {
   const hms = secondsToHMS(totalSeconds);
 
-  const onChange = (event, fieldName) => {
+  const onChange = React.useCallback((event, fieldName) => {
     let val = event.target.value;
     switch (fieldName) {
       case 'hour':
@@ -57,7 +57,7 @@ const Timer = React.memo(function Timer({
         },
       }
     });
-  };
+  }, [setTimers]);
 
 
   return (
