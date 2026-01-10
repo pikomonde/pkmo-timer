@@ -9,14 +9,21 @@ function secondsToHMS(seconds) {
   };
 }
 
-function Timer({ id, timer, editingTimer, setEditingTimer, onUpdate, onEdit, onDelete }) {
+function Timer({ id, timer, editingTimer, setTimers, onUpdate, onEdit, onDelete }) {
   const hms = secondsToHMS(timer.totalSeconds);
 
   function onChange(event, fieldName) {
-    let newTimer = {...editingTimer};
-    newTimer[fieldName] = event.target.value;
-    setEditingTimer(newTimer);
+    setTimers(prev => {
+      return {
+        ...prev,
+        editingTimer: {
+          ...prev.editingTimer,
+          [fieldName]: event.target.value,
+        },
+      }
+    });
   }
+
 
   return (
     <div className='timer-card'>
@@ -82,27 +89,30 @@ function Timer({ id, timer, editingTimer, setEditingTimer, onUpdate, onEdit, onD
 }
 
 function Timers({ timers, setTimers }) {
-  const [editingTimer, setEditingTimer] = React.useState({});
 
   const onCreate = () => {
     const id = crypto.randomUUID();
-    setTimers({
-      ...timers,
-      byId: {
-        ...timers.byId,
-        [id]: {
+    setTimers(prev => {
+      
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [id]: {
+            name: '',
+            totalSeconds: 0,
+            status: 'editing', // 'idle', 'editing', or 'running'
+          }
+        },
+        allIds: [...prev.allIds, id],
+        editingTimer: {
+          isEditing: true,
           name: '',
-          totalSeconds: 0,
-          status: 'editing', // 'idle', 'editing', or 'running'
-        }
-      },
-    });
-    setEditingTimer({
-      isEditing: true,
-      name: '',
-      hour: 0,
-      minute: 0,
-      second: 0,
+          hour: 0,
+          minute: 0,
+          second: 0,
+        },
+      }
     });
   };
 
@@ -110,64 +120,69 @@ function Timers({ timers, setTimers }) {
     // TODO: handle totalSeconds = 0
     // TODO: handle name = ''
 
-    setTimers({
-      ...timers,
-      byId: {
-        ...timers.byId,
-        [id]: {
-          name: name || 'Untitled Timer',
-          totalSeconds: Number(hour) * 3600 + Number(minute) * 60 + Number(second),
-          status: "idle",
-        }
-      },
-    });
-    setEditingTimer({
-      isEditing: false,
-      name: '',
-      hour: 0,
-      minute: 0,
-      second: 0,
+    setTimers(prev => {
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [id]: {
+            ...prev.byId[id],
+            name: name || 'Untitled Timer',
+            totalSeconds: Number(hour) * 3600 + Number(minute) * 60 + Number(second),
+            status: "idle",
+          }
+        },
+        editingTimer: {
+          isEditing: false,
+          name: '',
+          hour: 0,
+          minute: 0,
+          second: 0,
+        },
+      }
     });
   }
 
   const onEdit = (id) => {
-    const hms = secondsToHMS(timers.byId[id].totalSeconds);
-
-    setTimers({
-      ...timers,
-      byId: {
-        ...timers.byId,
-        [id]: {
-          ...timers.byId[id],
-          status: 'editing',
-        }
-      },
-    });
-    setEditingTimer({
-      isEditing: true,
-      name: timers.byId[id].name,
-      hour: hms.hour,
-      minute: hms.minute,
-      second: hms.second,
+    setTimers(prev => {
+      const hms = secondsToHMS(prev.byId[id].totalSeconds);
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [id]: {
+            ...prev.byId[id],
+            status: 'editing',
+          }
+        },
+        editingTimer: {
+          isEditing: true,
+          name: prev.byId[id].name,
+          hour: hms.hour,
+          minute: hms.minute,
+          second: hms.second,
+        },
+      }
     });
   }
 
   const onDelete = (id) => {
-    const newById = { ...timers.byId };
-    delete newById[id];
+    setTimers(prev => {
+      const { [id]: _, ...remainingById } = prev.byId;
+      const newAllIds = prev.allIds.filter(activeId => activeId !== id);
 
-    const newAllIds = timers.allIds.filter(activeId => activeId !== id);
-
-    setTimers({
-      byId: {...newById},
-      allIds: [...newAllIds],
-    });
-    setEditingTimer({
-      isEditing: false,
-      name: '',
-      hour: 0,
-      minute: 0,
-      second: 0,
+      return {
+        ...prev,
+        byId: {...remainingById},
+        allIds: [...newAllIds],
+        editingTimer: {
+          isEditing: false,
+          name: '',
+          hour: 0,
+          minute: 0,
+          second: 0,
+        },
+      }
     });
   }
 
@@ -178,8 +193,8 @@ function Timers({ timers, setTimers }) {
           key={id}
           id={id}
           timer={timers.byId[id]}
-          editingTimer={editingTimer}
-          setEditingTimer={setEditingTimer}
+          editingTimer={timers.editingTimer}
+          setTimers={setTimers}
           onUpdate={onUpdate}
           onEdit={onEdit}
           onDelete={onDelete}
@@ -188,7 +203,7 @@ function Timers({ timers, setTimers }) {
       <button
         className='timer-button-add'
         onClick={onCreate}
-        disabled={editingTimer.isEditing}
+        disabled={timers.editingTimer.isEditing}
       >Add New Timer</button>
     </div>
   )
@@ -218,6 +233,13 @@ function App() {
       }
     },
     allIds: [id1, id2, id3],
+    editingTimer: {
+      isEditing: false,
+      name: '',
+      hour: 0,
+      minute: 0,
+      second: 0,
+    },
   };
 
   const [timers, setTimers] = React.useState(exampleListOfTimers);
