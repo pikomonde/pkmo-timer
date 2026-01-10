@@ -87,12 +87,15 @@ function Timers({ timers, setTimers }) {
   const onCreate = () => {
     const id = crypto.randomUUID();
     setTimers({
-      byId: {...timers.byId, [id]: {
-        name: '',
-        totalSeconds: 0,
-        status: 'editing', // 'idle', 'editing', or 'running'
-      }},
-      allIds: [...timers.allIds, id],
+      ...timers,
+      byId: {
+        ...timers.byId,
+        [id]: {
+          name: '',
+          totalSeconds: 0,
+          status: 'editing', // 'idle', 'editing', or 'running'
+        }
+      },
     });
     setEditingTimer({
       isEditing: true,
@@ -107,16 +110,16 @@ function Timers({ timers, setTimers }) {
     // TODO: handle totalSeconds = 0
     // TODO: handle name = ''
 
-    const updatedTimers = {...timers.byId}
-    updatedTimers[id] = {
-      name: name || 'Untitled Timer',
-      totalSeconds: Number(hour) * 3600 + Number(minute) * 60 + Number(second),
-      status: "idle",
-    }
-
     setTimers({
-      byId: updatedTimers,
-      allIds: [...timers.allIds],
+      ...timers,
+      byId: {
+        ...timers.byId,
+        [id]: {
+          name: name || 'Untitled Timer',
+          totalSeconds: Number(hour) * 3600 + Number(minute) * 60 + Number(second),
+          status: "idle",
+        }
+      },
     });
     setEditingTimer({
       isEditing: false,
@@ -131,11 +134,14 @@ function Timers({ timers, setTimers }) {
     const hms = secondsToHMS(timers.byId[id].totalSeconds);
 
     setTimers({
-      byId: {...timers.byId, [id]: {
-        ...timers.byId[id],
-        status: 'editing',
-      }},
-      allIds: [...timers.allIds],
+      ...timers,
+      byId: {
+        ...timers.byId,
+        [id]: {
+          ...timers.byId[id],
+          status: 'editing',
+        }
+      },
     });
     setEditingTimer({
       isEditing: true,
