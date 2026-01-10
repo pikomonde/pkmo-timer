@@ -9,10 +9,19 @@ function secondsToHMS(seconds) {
   };
 }
 
-function Timer({ id, timer, editingTimer, setTimers, onUpdate, onEdit, onDelete }) {
-  const hms = secondsToHMS(timer.totalSeconds);
+const Timer = React.memo(function Timer({ 
+  id,
+  timer: {name, totalSeconds, status},
+  editingTimer,
+  isOtherTimerEdited,
+  setTimers,
+  onUpdate,
+  onEdit,
+  onDelete, 
+}) {
+  const hms = secondsToHMS(totalSeconds);
 
-  function onChange(event, fieldName) {
+  const onChange = (event, fieldName) => {
     setTimers(prev => {
       return {
         ...prev,
@@ -22,7 +31,7 @@ function Timer({ id, timer, editingTimer, setTimers, onUpdate, onEdit, onDelete 
         },
       }
     });
-  }
+  };
 
 
   return (
@@ -30,54 +39,54 @@ function Timer({ id, timer, editingTimer, setTimers, onUpdate, onEdit, onDelete 
       <input
         type='text'
         placeholder='Input timer name'
-        disabled={timer.status !== 'editing'}
-        value={timer.status !== 'editing' ? timer.name : editingTimer.name}
+        disabled={status !== 'editing'}
+        value={status !== 'editing' ? name : editingTimer.name}
         onChange={(event) => onChange(event, 'name')}
       />
       <input
         type='number'
         placeholder='Input hours'
-        disabled={timer.status !== 'editing'}
-        value={timer.status !== 'editing' ? hms.hour : editingTimer.hour}
+        disabled={status !== 'editing'}
+        value={status !== 'editing' ? hms.hour : editingTimer.hour}
         onChange={(event) => onChange(event, 'hour')}
       />
       <input
         type='number'
         placeholder='Input minutes'
-        disabled={timer.status !== 'editing'}
-        value={timer.status !== 'editing' ? hms.minute : editingTimer.minute}
+        disabled={status !== 'editing'}
+        value={status !== 'editing' ? hms.minute : editingTimer.minute}
         onChange={(event) => onChange(event, 'minute')}
       />
       <input
         type='number'
         placeholder='Input seconds'
-        disabled={timer.status !== 'editing'}
-        value={timer.status !== 'editing' ? hms.second : editingTimer.second}
+        disabled={status !== 'editing'}
+        value={status !== 'editing' ? hms.second : editingTimer.second}
         onChange={(event) => onChange(event, 'second')}
       />
       
-      {timer.status === 'editing' &&
+      {status === 'editing' &&
         <button
           className='timer-button-save'
-          disabled={timer.status !== 'editing'}
+          disabled={status !== 'editing'}
           onClick={() => onUpdate(id, editingTimer)}
         >
           Save
         </button>
       }
-      {timer.status === 'editing' &&
+      {status === 'editing' &&
         <button
           className='timer-button-delete'
-          disabled={timer.status !== 'editing'}
+          disabled={status !== 'editing'}
           onClick={() => onDelete(id)}
         >
           Delete
         </button>
       }
-      {timer.status === 'idle' &&
+      {status === 'idle' &&
         <button
           className='timer-button-edit'
-          disabled={timer.status !== 'idle' || editingTimer.isEditing}
+          disabled={status !== 'idle' || isOtherTimerEdited}
           onClick={() => onEdit(id)}
         >
           Edit
@@ -86,11 +95,11 @@ function Timer({ id, timer, editingTimer, setTimers, onUpdate, onEdit, onDelete 
 
     </div>
   )
-}
+});
 
 function Timers({ timers, setTimers }) {
 
-  const onCreate = () => {
+  const onCreate = React.useCallback(() => {
     const id = crypto.randomUUID();
     setTimers(prev => {
       
@@ -114,9 +123,9 @@ function Timers({ timers, setTimers }) {
         },
       }
     });
-  };
+  }, [setTimers]);
 
-  const onUpdate = (id, { name, hour, minute, second }) => {
+  const onUpdate = React.useCallback((id, { name, hour, minute, second }) => {
     // TODO: handle totalSeconds = 0
     // TODO: handle name = ''
 
@@ -141,9 +150,9 @@ function Timers({ timers, setTimers }) {
         },
       }
     });
-  }
+  }, [setTimers]);
 
-  const onEdit = (id) => {
+  const onEdit = React.useCallback((id) => {
     setTimers(prev => {
       const hms = secondsToHMS(prev.byId[id].totalSeconds);
       return {
@@ -164,9 +173,9 @@ function Timers({ timers, setTimers }) {
         },
       }
     });
-  }
+  }, [setTimers]);
 
-  const onDelete = (id) => {
+  const onDelete = React.useCallback((id) => {
     setTimers(prev => {
       const { [id]: _, ...remainingById } = prev.byId;
       const newAllIds = prev.allIds.filter(activeId => activeId !== id);
@@ -184,16 +193,19 @@ function Timers({ timers, setTimers }) {
         },
       }
     });
-  }
+  }, [setTimers]);
 
   return (
     <div className='timers-container'>
       {timers.allIds.map((id) => {
+        const isEditingThisOne = timers.byId[id].status === 'editing';
+        const isOtherTimerEdited = timers.editingTimer.isEditing;
         return <Timer
           key={id}
           id={id}
           timer={timers.byId[id]}
-          editingTimer={timers.editingTimer}
+          editingTimer={isEditingThisOne ? timers.editingTimer: null}
+          isOtherTimerEdited={isOtherTimerEdited}
           setTimers={setTimers}
           onUpdate={onUpdate}
           onEdit={onEdit}
