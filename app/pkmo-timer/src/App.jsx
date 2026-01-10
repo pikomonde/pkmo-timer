@@ -3,6 +3,23 @@ import './App.css'
 
 const MS_IN_60_FPS = 1000 / 60;
 const TimerCallbackActionsContext = React.createContext(null);
+const newTimer = (overrides = {}) => ({
+  id: crypto.randomUUID(),
+  name: '',
+  totalSeconds: 0, // in seconds
+  status: 'editing', // 'idle', 'editing', 'running', or 'notifying'
+  notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
+  runSecondsLeft: 0,
+  ...overrides,
+});
+const newEditingTimer = (overrides = {}) => ({
+  isEditing: false,
+  name: '',
+  hour: 0,
+  minute: 0,
+  second: 0,
+  ...overrides
+});
 
 function secondsToHMS(seconds) {
   return {
@@ -120,35 +137,24 @@ const Timer = React.memo(function Timer({
 function Timers({ timers, setTimers }) {
 
   const onCreate = React.useCallback(() => {
-    const id = crypto.randomUUID();
+    const timer = newTimer();
     setTimers(prev => {
       return {
         ...prev,
-        byId: {
-          ...prev.byId,
-          [id]: {
-            name: '',
-            totalSeconds: 0,
-            status: 'editing', // 'idle', 'editing', 'running', or 'notifying'
-            notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
-            runSecondsLeft: 0,
-          }
-        },
-        allIds: [...prev.allIds, id],
-        editingTimer: {
-          isEditing: true,
-          name: '',
-          hour: 0,
-          minute: 0,
-          second: 0,
-        },
+        byId: {...prev.byId, [timer.id]: timer},
+        allIds: [...prev.allIds, timer.id],
+        editingTimer: newEditingTimer({isEditing: true}),
       }
     });
   }, [setTimers]);
 
   const onUpdate = React.useCallback((id, { name, hour, minute, second }) => {
-    // TODO: handle totalSeconds = 0
-    // TODO: handle name = ''
+    const totalSeconds = Number(hour) * 3600 + Number(minute) * 60 + Number(second);
+
+    if (totalSeconds === 0) {
+      // TODO: handle 0 totalSeconds
+      return;
+    }
 
     setTimers(prev => {
       return {
@@ -157,18 +163,12 @@ function Timers({ timers, setTimers }) {
           ...prev.byId,
           [id]: {
             ...prev.byId[id],
-            name: name || 'Untitled Timer',
-            totalSeconds: Number(hour) * 3600 + Number(minute) * 60 + Number(second),
+            name: name.trim() || 'Untitled Timer',
+            totalSeconds: totalSeconds,
             status: "idle",
           }
         },
-        editingTimer: {
-          isEditing: false,
-          name: '',
-          hour: 0,
-          minute: 0,
-          second: 0,
-        },
+        editingTimer: newEditingTimer(),
       }
     });
   }, [setTimers]);
@@ -243,13 +243,7 @@ function Timers({ timers, setTimers }) {
         ...prev,
         byId: {...remainingById},
         allIds: [...newAllIds],
-        editingTimer: {
-          isEditing: false,
-          name: '',
-          hour: 0,
-          minute: 0,
-          second: 0,
-        },
+        editingTimer: newEditingTimer(),
       }
     });
   }, [setTimers]);
@@ -348,14 +342,7 @@ function App() {
       }
     },
     allIds: [id1, id2, id3],
-    // TODO: how to make this class as default?
-    editingTimer: {
-      isEditing: false,
-      name: '',
-      hour: 0,
-      minute: 0,
-      second: 0,
-    },
+    editingTimer: newEditingTimer(),
   };
 
   const [timers, setTimers] = React.useState(exampleListOfTimers);
@@ -378,6 +365,9 @@ function App() {
                 notifyAt: 0,
                 runSecondsLeft: 0,
               };
+              // TODO: move to binary files or hex
+              const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
+              alarmSound.play().catch((error) => {console.log(`Audio playbak failed: ${error.name} ${error.message}`)});
             } else {
               updatedTimers[id] = {
                 ...timer,
