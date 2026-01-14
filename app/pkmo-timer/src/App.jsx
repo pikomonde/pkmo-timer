@@ -7,9 +7,9 @@ const newTimer = (overrides = {}) => ({
   id: crypto.randomUUID(),
   name: '',
   totalSeconds: 0, // in seconds
-  status: 'editing', // 'idle', 'editing', 'running', or 'notifying'
+  status: 'editing', // 'idle', 'editing', 'running', 'paused', or 'notifying'
   notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
-  runSecondsLeft: 0,
+  runMiliSecondsLeft: 0,
   ...overrides,
 });
 const newEditingTimer = (overrides = {}) => ({
@@ -31,20 +31,22 @@ function secondsToHMS(seconds) {
 
 const Timer = React.memo(function Timer({
   id,
-  timer: {name, totalSeconds, status, runSecondsLeft},
+  timer: {name, totalSeconds, status, runMiliSecondsLeft},
   editingTimer = { name: '', hour: 0, minute: 0, second: 0 },
   isOtherTimerEdited,
 }) {
   const {hour, minute, second} = secondsToHMS(totalSeconds);
-  const {hour: runHour, minute: runMinute, second: runSecond} = secondsToHMS(runSecondsLeft);
-  const {onUpdate, onEdit, onDelete, onChange, onStartTimer, onStopTimer} = React.useContext(TimerCallbackActionsContext);
-
+  const {hour: runHour, minute: runMinute, second: runSecond} = secondsToHMS(Math.ceil(runMiliSecondsLeft / 1000));
+  const {onUpdate, onEdit, onDelete, onChange, onStartTimer, onPauseTimer, onResumeTimer, onStopTimer} = React.useContext(TimerCallbackActionsContext);
+  
   const nameInputRef = React.useRef(null);
   React.useEffect(() => {
     if (status === 'editing' && nameInputRef.current) {
       nameInputRef.current.focus();
     }
   }, [status]);
+  
+  const isDisplayRunningTime = status === 'running' || status === 'paused' || status === 'notifying';
 
   return (
     <div className='timer-card'>
@@ -60,21 +62,21 @@ const Timer = React.memo(function Timer({
         type='number'
         placeholder='Input hours'
         disabled={status !== 'editing'}
-        value={status === 'editing' ? editingTimer.hour : (status === 'running' || status === 'notifying' ? runHour : hour)}
+        value={status === 'editing' ? editingTimer.hour : (isDisplayRunningTime ? runHour : hour)}
         onChange={(event) => onChange(event, 'hour')}
       />
       <input
         type='number'
         placeholder='Input minutes'
         disabled={status !== 'editing'}
-        value={status === 'editing' ? editingTimer.minute : (status === 'running' || status === 'notifying' ? runMinute : minute)}
+        value={status === 'editing' ? editingTimer.minute : (isDisplayRunningTime ? runMinute : minute)}
         onChange={(event) => onChange(event, 'minute')}
       />
       <input
         type='number'
         placeholder='Input seconds'
         disabled={status !== 'editing'}
-        value={status === 'editing' ? editingTimer.second : (status === 'running' || status === 'notifying' ? runSecond : second)}
+        value={status === 'editing' ? editingTimer.second : (isDisplayRunningTime ? runSecond : second)}
         onChange={(event) => onChange(event, 'second')}
       />
 
@@ -113,6 +115,24 @@ const Timer = React.memo(function Timer({
         </button>
       }
       {status === 'running' &&
+        <button
+          className='timer-button-pause'
+          disabled={isOtherTimerEdited}
+          onClick={() => onPauseTimer(id)}
+        >
+          Pause
+        </button>
+      }
+      {status === 'paused' &&
+        <button
+          className='timer-button-pause'
+          disabled={isOtherTimerEdited}
+          onClick={() => onResumeTimer(id)}
+        >
+          Resume
+        </button>
+      }
+      {status === 'paused' &&
         <button
           className='timer-button-stop'
           disabled={isOtherTimerEdited}
@@ -266,7 +286,41 @@ function Timers({ timers, setTimers, audioRefs }) {
             ...prev.byId[id],
             status: 'running',
             notifyAt: notifyAt,
-            runSecondsLeft: Math.ceil((totalMiliSeconds) / 1000),
+            runMiliSecondsLeft: totalMiliSeconds,
+          }
+        },
+      }
+    });
+  }, [setTimers]);
+
+  const onPauseTimer = React.useCallback((id) => {
+    setTimers(prev => {
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [id]: {
+            ...prev.byId[id],
+            status: 'paused',
+          }
+        },
+      }
+    });
+  }, [setTimers]);
+
+  const onResumeTimer = React.useCallback((id) => {
+    setTimers(prev => {
+      const runMiliSecondsLeft = prev.byId[id].runMiliSecondsLeft;
+      const notifyAt = Date.now() + runMiliSecondsLeft;
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [id]: {
+            ...prev.byId[id],
+            status: 'running',
+            notifyAt: notifyAt,
+            runMiliSecondsLeft: runMiliSecondsLeft,
           }
         },
       }
@@ -295,8 +349,8 @@ function Timers({ timers, setTimers, audioRefs }) {
   }, [setTimers, audioRefs]);
 
   const callbackActions = React.useMemo(() => ({
-    onUpdate, onEdit, onChange, onDelete, onStartTimer, onStopTimer
-  }), [onUpdate, onEdit, onChange, onDelete, onStartTimer, onStopTimer]);
+    onUpdate, onEdit, onChange, onDelete, onStartTimer, onPauseTimer, onResumeTimer, onStopTimer
+  }), [onUpdate, onEdit, onChange, onDelete, onStartTimer, onPauseTimer, onResumeTimer, onStopTimer]);
 
   return (
     <TimerCallbackActionsContext.Provider value={callbackActions}>
@@ -332,23 +386,23 @@ function App() {
       [id1]: {
         name: "coffee break",
         totalSeconds: 5 * 60, // in seconds
-        status: 'idle', // 'idle', 'editing', 'running', or 'notifying'
+        status: 'idle', // 'idle', 'editing', 'running', 'paused', or 'notifying'
         notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
-        runSecondsLeft: 0,
+        runMiliSecondsLeft: 0,
       },
       [id2]: {
         name: "generating report A",
         totalSeconds: 20 * 60, // in seconds
-        status: 'idle', // 'idle', 'editing', 'running', or 'notifying'
+        status: 'idle', // 'idle', 'editing', 'running', 'paused', or 'notifying'
         notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
-        runSecondsLeft: 0,
+        runMiliSecondsLeft: 0,
       },
       [id3]: {
         name: "generating report B",
         totalSeconds: 12 * 60, // in seconds
-        status: 'idle', // 'idle', 'editing', 'running', or 'notifying'
+        status: 'idle', // 'idle', 'editing', 'running', 'paused', or 'notifying'
         notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
-        runSecondsLeft: 0,
+        runMiliSecondsLeft: 0,
       }
     },
     allIds: [id1, id2, id3],
@@ -374,7 +428,7 @@ function App() {
                 ...timer,
                 status: 'notifying',
                 notifyAt: 0,
-                runSecondsLeft: 0,
+                runMiliSecondsLeft: 0,
               };
               if (!audioRefs.current[id]) {
                 // TODO: move to binary files or hex
@@ -386,7 +440,7 @@ function App() {
             } else {
               updatedTimers[id] = {
                 ...timer,
-                runSecondsLeft: Math.ceil((timer.notifyAt - now) / 1000),
+                runMiliSecondsLeft: (timer.notifyAt - now),
               };
             }
           }
