@@ -125,7 +125,7 @@ const Timer = React.memo(function Timer({
       }
       {status === 'paused' &&
         <button
-          className='timer-button-pause'
+          className='timer-button-resume'
           disabled={isOtherTimerEdited}
           onClick={() => onResumeTimer(id)}
         >
