@@ -1,0 +1,164 @@
+/* App.css */
+
+:root {
+  /* Brand Colors */
+  --piko-primary: #7C4DFF;
+  --piko-primary-soft: #F3E5F5;
+  --piko-success: #2ECC71;
+  --piko-danger: #FF7675;
+  --piko-warning: #FFEAA7;
+  
+  /* Grayscale / Neutrals */
+  --piko-bg: #F8F9FB;
+  --piko-card: #FFFFFF;
+  --piko-text: #2D3436;
+  --piko-muted: #B2BEC3;
+  --piko-border: #E0E0E0;
+
+  /* Elevation */
+  --piko-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --piko-radius: 2px;
+}
+
+/* Reset & Base */
+body {
+  background-color: var(--piko-bg);
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--piko-text);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* CONTAINER (mobile first) */
+.timers-container {
+  width: 100%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+}
+
+/* CARD (Mobile First: Vertikal) */
+.timer-card {
+  background: var(--piko-card);
+  border-radius: var(--piko-radius);
+  padding: 4px;
+  display: flex;
+  flex-direction: column; 
+  gap: 0px;
+  box-shadow: var(--piko-shadow);
+  border: 1px solid var(--piko-border);
+}
+
+/* Timer Inputs & Control Buttons */
+.timer-card-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Input Styling */
+.timer-card input[type='text'] {
+  width: 100%;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--piko-text);
+  outline: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.timer-card input[type='text']:focus {
+  border-bottom-color: var(--piko-primary);
+}
+
+/* Input Number Group */
+.timer-card-time-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Monaco', monospace;
+}
+
+/* Button Group */
+.timer-card-action-group {
+  display: flex;
+  gap: 8px;
+  min-width: 120px; 
+  justify-content: flex-start; 
+}
+
+.timer-card input[type='number'] {
+  width: 45px;
+  border: 1px solid var(--piko-border);
+  border-radius: 6px;
+  padding: 6px 2px;
+  text-align: center;
+  background: var(--piko-bg);
+}
+
+/* Button Base */
+.timer-card-button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: opacity 0.2s;
+}
+
+.timer-card-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Button Variation using Variables */
+.timer-button-start { background: var(--piko-primary); color: white; }
+.timer-button-edit  { background: var(--piko-primary-soft); color: var(--piko-primary); }
+.timer-button-save  { background: var(--piko-success); color: white; }
+.timer-button-delete{ background: var(--piko-danger); color: white; }
+.timer-button-pause { background: var(--piko-warning); color: #856404; }
+.timer-button-stop  { background: var(--piko-danger); color: white; }
+.timer-button-notify{ background: var(--piko-danger); color: white; }
+
+/* Add New Button */
+.timer-button-add {
+  margin-top: 10px;
+  padding: 16px;
+  border: 2px dashed var(--piko-primary);
+  background: transparent;
+  color: var(--piko-primary);
+  border-radius: var(--piko-radius);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* --- DESKTOP VIEW (Width > 640px) --- */
+@media (min-width: 640px) {
+  .timers-container {
+    max-width: 768px; 
+  }
+
+  .timer-card {
+    flex-direction: row; /* Back to 1 line */
+    align-items: center;
+    padding: 12px 24px;
+  }
+
+  .timer-card-controls {
+    flex-shrink: 0; /* Prevent control button shrink */
+  }
+
+  .timer-card input[type='text'] {
+    flex: 1; /* Timer name to fill extra space */
+  }
+
+  .timer-card input[type='number'] {
+    width: 55px;
+    font-size: 16px;
+  }
+}
