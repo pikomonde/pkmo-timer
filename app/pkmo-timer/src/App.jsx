@@ -34,7 +34,7 @@ function App() {
         notifyAt: 0, // in mili unix time stamp, will be used when the timer starts
         runMiliSecondsLeft: 0,
       },
-      [id3]: {
+      [id4]: {
         name: "render video",
         totalSeconds: 75 * 60, // in seconds
         status: 'idle', // 'idle', 'editing', 'running', 'paused', or 'notifying'
