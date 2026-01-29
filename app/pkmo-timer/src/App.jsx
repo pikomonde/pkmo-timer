@@ -371,11 +371,13 @@ function Timers({ timers, setTimers, audioRefs }) {
             isOtherTimerEdited={isOtherTimerEdited}
           />
         })}
-        <button
-          className='timer-button-add'
-          onClick={onCreate}
-          disabled={timers.editingTimer.isEditing}
-        >Add New Timer</button>
+        <div className='floating-footer'>
+          <button
+            className='timer-button-add'
+            onClick={onCreate}
+            disabled={timers.editingTimer.isEditing}
+            >Add New Timer</button>
+        </div>
       </div>
     </TimerCallbackActionsContext.Provider>
   )

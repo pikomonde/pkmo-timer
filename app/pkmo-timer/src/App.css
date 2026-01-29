@@ -16,6 +16,9 @@
   /* Elevation */
   --piko-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --piko-radius: 2px;
+
+  /* Sizes*/
+  --piko-timers-container-xs: 320px;
 }
 
 /* Reset & Base */
@@ -30,9 +33,10 @@ body {
 
 /* CONTAINER (mobile first) */
 .timers-container {
-  max-width: 360px;
+  max-width: var(--piko-timers-container-xs);
   width: 100%;
   padding: 0px;
+  padding-bottom: calc(32px + 1em);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -129,10 +133,15 @@ body {
 
 /* Add New Button */
 .timer-button-add {
-  margin-top: 10px;
+  position: fixed;
+  bottom: 0px;
+  max-width: var(--piko-timers-container-xs);
+  width: 100%;
+  z-index: 1000;
+
   padding: 16px;
   border: 2px dashed var(--piko-primary);
-  background: transparent;
+  background: var(--piko-bg);
   color: var(--piko-primary);
   border-radius: var(--piko-radius);
   font-weight: bold;
@@ -162,11 +171,15 @@ body {
     flex: 2;
     gap: 8px;
   }
+
+  .timer-button-add {
+    max-width: none;
+  }
 }
 
 @media (min-width: 640px) {
   .timers-container {
-    max-width: 768px; 
+    width: 640px; 
   }
 
   .timer-card {
@@ -186,5 +199,9 @@ body {
   .timer-card input[type='number'] {
     width: 4em;
     font-size: 1em;
+  }
+
+  .timer-button-add {
+    width: 640px;
   }
 }
