@@ -1,0 +1,46 @@
+.timers-container {
+  max-width: var(--piko-timers-container-xs);
+  width: 100%;
+  padding: 0px;
+  padding-bottom: calc(32px + 1em);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+}
+
+.timer-button-add {
+  position: fixed;
+  bottom: 0px;
+  max-width: var(--piko-timers-container-xs);
+  width: 100%;
+  z-index: 1000;
+
+  padding: 16px;
+  border: 2px dashed var(--piko-primary);
+  background: var(--piko-bg);
+  color: var(--piko-primary);
+  border-radius: var(--piko-radius);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (min-width: 400px) {
+  .timers-container {
+    max-width: none;
+  }
+
+  .timer-button-add {
+    max-width: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .timers-container {
+    width: 640px; 
+  }
+
+  .timer-button-add {
+    width: 640px;
+  }
+}
