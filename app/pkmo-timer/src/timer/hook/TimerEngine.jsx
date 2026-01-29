@@ -1,4 +1,6 @@
 import React from 'react';
+// source: https://pixabay.com/sound-effects/technology-alarm-clock-90867/
+import alarmClock90867Src from '../assets/audio/alarm-clock-90867.mp3';
 
 export const useTimerEngine = (initialState, tickInterval) => {
   const [timers, setTimers] = React.useState(initialState);
@@ -24,8 +26,8 @@ export const useTimerEngine = (initialState, tickInterval) => {
                 runMiliSecondsLeft: 0,
               };
               if (!audioRefs.current[id]) {
-                // TODO: move to binary files or hex
-                const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
+                // const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
+                const alarmSound = new Audio(alarmClock90867Src);
                 alarmSound.loop = true;
                 alarmSound.play().catch((error) => {console.log(`Audio playbak failed: ${error.name} ${error.message}`)});
                 audioRefs.current[id] = alarmSound;
