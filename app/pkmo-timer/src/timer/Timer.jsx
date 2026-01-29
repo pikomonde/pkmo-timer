@@ -1,6 +1,6 @@
 import React from 'react';
 import './Timer.css';
-import { secondsToHMS } from '../utils/TimerUtils';
+import { secondsToHMS } from './utils/TimerUtils';
 import { TimerCallbackActionsContext } from './TimerContext';
 
 export const Timer = React.memo(function Timer({

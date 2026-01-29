@@ -1,6 +1,6 @@
 import React from 'react';
 import './Timers.css';
-import { newEditingTimer, newTimer, secondsToHMS } from '../utils/TimerUtils';
+import { newEditingTimer, newTimer, secondsToHMS } from './utils/TimerUtils';
 import { Timer } from './Timer';
 import { TimerCallbackActionsContext } from './TimerContext';
 
