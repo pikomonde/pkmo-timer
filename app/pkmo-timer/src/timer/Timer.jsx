@@ -17,6 +17,10 @@ export const Timer = React.memo(function Timer({
   React.useEffect(() => {
     if (status === 'editing' && nameInputRef.current) {
       nameInputRef.current.focus();
+      nameInputRef.current.scrollIntoView({
+        behaviour: 'smooth',
+        block: 'center',
+      });
     }
   }, [status]);
   
