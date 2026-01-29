@@ -20,5 +20,6 @@ export const newEditingTimer = (overrides = {}) => ({
   hour: 0,
   minute: 0,
   second: 0,
+  // errorMsg: null,
   ...overrides
 });

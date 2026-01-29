@@ -22,7 +22,13 @@ export const Timers = ({ timers, setTimers, audioRefs }) => {
     const totalSeconds = Number(hour) * 3600 + Number(minute) * 60 + Number(second);
 
     if (totalSeconds === 0) {
-      // TODO: handle 0 totalSeconds
+      setTimers(prev => ({
+        ...prev,
+        editingTimer: {
+          ...prev.editingTimer,
+          errorMsg: 'Timer cannot be zero second.',
+        },
+      }));
       return;
     }
 

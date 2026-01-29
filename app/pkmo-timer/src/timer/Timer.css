@@ -76,6 +76,18 @@
   cursor: not-allowed;
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.is-invalid-input {
+  border: 1.5px solid var(--piko-danger) !important;
+  background-color: #fff5f5; 
+  animation: shake 0.2s ease-in-out 0s 2;
+}
+
 /* Button Variation using Variables */
 .timer-button-start { background: var(--piko-primary); color: white; }
 .timer-button-edit  { background: var(--piko-primary-soft); color: var(--piko-primary); }

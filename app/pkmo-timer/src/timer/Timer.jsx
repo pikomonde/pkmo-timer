@@ -36,6 +36,7 @@ export const Timer = React.memo(function Timer({
         <div className='timer-card-time-group'>
           <input
             type='number'
+            className={`${editingTimer?.errorMsg ? 'is-invalid-input' : ''}`}
             placeholder='Input hours'
             disabled={status !== 'editing'}
             value={status === 'editing' ? editingTimer.hour : (isDisplayRunningTime ? runHour : hour)}
@@ -43,6 +44,7 @@ export const Timer = React.memo(function Timer({
           />
           <input
             type='number'
+            className={`${editingTimer?.errorMsg ? 'is-invalid-input' : ''}`}
             placeholder='Input minutes'
             disabled={status !== 'editing'}
             value={status === 'editing' ? editingTimer.minute : (isDisplayRunningTime ? runMinute : minute)}
@@ -50,6 +52,7 @@ export const Timer = React.memo(function Timer({
           />
           <input
             type='number'
+            className={`${editingTimer?.errorMsg ? 'is-invalid-input' : ''}`}
             placeholder='Input seconds'
             disabled={status !== 'editing'}
             value={status === 'editing' ? editingTimer.second : (isDisplayRunningTime ? runSecond : second)}
@@ -128,6 +131,13 @@ export const Timer = React.memo(function Timer({
             </button>
           }
         </div>
+        {/* <div>
+            {editingTimer?.errorMsg && (
+            <span style={{ color: 'var(--piko-danger)', fontSize: '10px' }}>
+                {editingTimer.errorMsg}
+            </span>
+            )}
+        </div> */}
       </div>
     </div>
   )
