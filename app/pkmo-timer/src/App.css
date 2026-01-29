@@ -1,5 +1,3 @@
-/* App.css */
-
 :root {
   /* Brand Colors */
   --piko-primary: #7C4DFF;
@@ -32,6 +30,7 @@ body {
 
 /* CONTAINER (mobile first) */
 .timers-container {
+  max-width: 360px;
   width: 100%;
   padding: 0px;
   display: flex;
@@ -40,13 +39,13 @@ body {
   box-sizing: border-box;
 }
 
-/* CARD (Mobile First: Vertikal) */
+/* CARD (mobile first) */
 .timer-card {
   background: var(--piko-card);
   border-radius: var(--piko-radius);
   padding: 4px;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 0px;
   box-shadow: var(--piko-shadow);
   border: 1px solid var(--piko-border);
@@ -55,15 +54,23 @@ body {
 /* Timer Inputs & Control Buttons */
 .timer-card-controls {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+}
+
+.timer-card-time-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Monaco', monospace;
 }
 
 /* Input Styling */
 .timer-card input[type='text'] {
   width: 100%;
   border: none;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 700;
   color: var(--piko-text);
   outline: none;
@@ -75,24 +82,9 @@ body {
   border-bottom-color: var(--piko-primary);
 }
 
-/* Input Number Group */
-.timer-card-time-group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: 'Monaco', monospace;
-}
-
-/* Button Group */
-.timer-card-action-group {
-  display: flex;
-  gap: 8px;
-  min-width: 120px; 
-  justify-content: flex-start; 
-}
-
 .timer-card input[type='number'] {
-  width: 45px;
+  flex: 1;
+  width: 100%;
   border: 1px solid var(--piko-border);
   border-radius: 6px;
   padding: 6px 2px;
@@ -100,14 +92,24 @@ body {
   background: var(--piko-bg);
 }
 
+/* Button Group */
+.timer-card-action-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: stretch; 
+}
+
 /* Button Base */
 .timer-card-button {
   cursor: pointer;
   border: none;
   border-radius: 8px;
+  flex: 1;
+  width: 100%;
   padding: 8px 12px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.75em;
   transition: opacity 0.2s;
 }
 
@@ -137,28 +139,52 @@ body {
   cursor: pointer;
 }
 
-/* --- DESKTOP VIEW (Width > 640px) --- */
+@media (min-width: 400px) {
+  .timers-container {
+    max-width: none;
+  }
+
+  .timer-card-controls {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .timer-card-time-group {
+    flex: 3;
+  }
+
+  .timer-card-button {
+    width: 6em;
+  }
+
+  .timer-card-action-group {
+    display: flex;
+    flex: 2;
+    gap: 8px;
+  }
+}
+
 @media (min-width: 640px) {
   .timers-container {
     max-width: 768px; 
   }
 
   .timer-card {
-    flex-direction: row; /* Back to 1 line */
-    align-items: center;
+    flex-direction: row;
+    align-items: left;
     padding: 12px 24px;
   }
 
   .timer-card-controls {
-    flex-shrink: 0; /* Prevent control button shrink */
+    flex: 2;
   }
 
   .timer-card input[type='text'] {
-    flex: 1; /* Timer name to fill extra space */
+    flex: 1;
   }
 
   .timer-card input[type='number'] {
-    width: 55px;
-    font-size: 16px;
+    width: 4em;
+    font-size: 1em;
   }
 }

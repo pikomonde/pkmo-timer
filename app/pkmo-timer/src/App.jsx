@@ -97,7 +97,7 @@ const Timer = React.memo(function Timer({
               className='timer-card-button timer-button-delete'
               onClick={() => onDelete(id)}
             >
-              Del
+              Delete
             </button>
           }
           {status === 'idle' &&
@@ -133,7 +133,7 @@ const Timer = React.memo(function Timer({
               disabled={isOtherTimerEdited}
               onClick={() => onResumeTimer(id)}
             >
-              Rsme
+              Resume
             </button>
           }
           {status === 'paused' &&
