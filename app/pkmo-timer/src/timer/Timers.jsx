@@ -15,7 +15,7 @@ export const Timers = ({ timers, setTimers }) => {
         ...prev,
         byId: {...prev.byId, [timer.id]: timer},
         allIds: [...prev.allIds, timer.id],
-        editingTimer: newEditingTimer({isEditing: true}),
+        editingTimer: newEditingTimer({ isEditing: true }),
       }
     });
   }, [setTimers]);
