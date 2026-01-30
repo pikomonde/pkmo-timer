@@ -8,7 +8,6 @@ export const useTimerEngine = (initialState, tickInterval) => {
     const saved = localStorage.getItem(LOCAL_STORAGE_SAVE_NAME);
     return saved ? JSON.parse(saved) : initialState;
   });
-  const audioRefs = React.useRef({});
 
   React.useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_SAVE_NAME, JSON.stringify(timers));
@@ -55,6 +54,6 @@ export const useTimerEngine = (initialState, tickInterval) => {
     return () => clearInterval(tick);
   }, [tickInterval]);
 
-  return { timers, setTimers, audioRefs };
+  return { timers, setTimers };
 }
 

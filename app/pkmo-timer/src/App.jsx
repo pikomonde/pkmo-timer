@@ -46,14 +46,13 @@ function App() {
     editingTimer: newEditingTimer(),
   };
 
-  const {timers, setTimers, audioRefs} = useTimerEngine(exampleListOfTimers, MS_IN_60_FPS);
+  const {timers, setTimers} = useTimerEngine(exampleListOfTimers, MS_IN_60_FPS);
 
   return (
     <>
       <Timers
         timers={timers}
         setTimers={setTimers}
-        audioRefs={audioRefs}
       />
     </>
   );

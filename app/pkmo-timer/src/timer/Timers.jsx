@@ -5,7 +5,7 @@ import { Timer } from './Timer';
 import { TimerCallbackActionsContext } from './TimerContext';
 import { soundManager } from './utils/SoundManager';
 
-export const Timers = ({ timers, setTimers, audioRefs }) => {
+export const Timers = ({ timers, setTimers }) => {
 
   const onCreate = React.useCallback(() => {
     const timer = newTimer();
@@ -124,7 +124,7 @@ export const Timers = ({ timers, setTimers, audioRefs }) => {
         editingTimer: newEditingTimer(),
       }
     });
-  }, [setTimers, audioRefs]);
+  }, [setTimers]);
 
   const onStartTimer = React.useCallback((id) => {
     setTimers(prev => {
@@ -195,7 +195,7 @@ export const Timers = ({ timers, setTimers, audioRefs }) => {
         },
       }
     });
-  }, [setTimers, audioRefs]);
+  }, [setTimers]);
 
   const callbackActions = React.useMemo(() => ({
     onUpdate, onEdit, onChange, onDelete, onStartTimer, onPauseTimer, onResumeTimer, onStopTimer
