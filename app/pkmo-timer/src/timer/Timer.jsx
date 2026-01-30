@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import styles from './Timer.module.css';
 import { secondsToHMS } from './utils/TimerUtils';
 import { TimerCallbackActionsContext } from './TimerContext';
+import { TimerStatus } from './constants/TimerConstants';
 
 export const Timer = React.memo(function Timer({
   id,
@@ -16,7 +17,7 @@ export const Timer = React.memo(function Timer({
   
   const nameInputRef = React.useRef(null);
   React.useEffect(() => {
-    if (status === 'editing' && nameInputRef.current) {
+    if (status === TimerStatus.EDITING && nameInputRef.current) {
       nameInputRef.current.focus();
       nameInputRef.current.scrollIntoView({
         behaviour: 'smooth',
@@ -25,7 +26,7 @@ export const Timer = React.memo(function Timer({
     }
   }, [status]);
   
-  const isDisplayRunningTime = status === 'running' || status === 'paused' || status === 'notifying';
+  const isDisplayRunningTime = status === TimerStatus.RUNNING || status === TimerStatus.PAUSED || status === TimerStatus.NOTIFYING;
 
   return (
     <div className={styles['timer-card']}>
@@ -33,8 +34,8 @@ export const Timer = React.memo(function Timer({
         ref={nameInputRef}
         type='text'
         placeholder='Input timer name'
-        disabled={status !== 'editing'}
-        value={status === 'editing' ? editingTimer.name : name}
+        disabled={status !== TimerStatus.EDITING}
+        value={status === TimerStatus.EDITING ? editingTimer.name : name}
         onChange={(event) => onChange(event, 'name')}
       />
       <div className={styles['timer-card-controls']}>
@@ -43,30 +44,30 @@ export const Timer = React.memo(function Timer({
             type='number'
             className={clsx({ [styles['is-invalid-input']]: editingTimer?.errorMsg })}
             placeholder='Input hours'
-            disabled={status !== 'editing'}
-            value={status === 'editing' ? editingTimer.hour : (isDisplayRunningTime ? runHour : hour)}
+            disabled={status !== TimerStatus.EDITING}
+            value={status === TimerStatus.EDITING ? editingTimer.hour : (isDisplayRunningTime ? runHour : hour)}
             onChange={(event) => onChange(event, 'hour')}
           />
           <input
             type='number'
             className={clsx({ [styles['is-invalid-input']]: editingTimer?.errorMsg })}
             placeholder='Input minutes'
-            disabled={status !== 'editing'}
-            value={status === 'editing' ? editingTimer.minute : (isDisplayRunningTime ? runMinute : minute)}
+            disabled={status !== TimerStatus.EDITING}
+            value={status === TimerStatus.EDITING ? editingTimer.minute : (isDisplayRunningTime ? runMinute : minute)}
             onChange={(event) => onChange(event, 'minute')}
           />
           <input
             type='number'
             className={clsx({ [styles['is-invalid-input']]: editingTimer?.errorMsg })}
             placeholder='Input seconds'
-            disabled={status !== 'editing'}
-            value={status === 'editing' ? editingTimer.second : (isDisplayRunningTime ? runSecond : second)}
+            disabled={status !== TimerStatus.EDITING}
+            value={status === TimerStatus.EDITING ? editingTimer.second : (isDisplayRunningTime ? runSecond : second)}
             onChange={(event) => onChange(event, 'second')}
           />
         </div>
 
         <div className={styles['timer-card-action-group']}>
-          {status === 'editing' &&
+          {status === TimerStatus.EDITING &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-save'])}
               onClick={() => onUpdate(id, editingTimer)}
@@ -74,7 +75,7 @@ export const Timer = React.memo(function Timer({
               Save
             </button>
           }
-          {status === 'editing' &&
+          {status === TimerStatus.EDITING &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-delete'])}
               onClick={() => onDelete(id)}
@@ -82,7 +83,7 @@ export const Timer = React.memo(function Timer({
               Delete
             </button>
           }
-          {status === 'idle' &&
+          {status === TimerStatus.IDLE &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-start'])}
               disabled={isOtherTimerEdited}
@@ -91,7 +92,7 @@ export const Timer = React.memo(function Timer({
               Start
             </button>
           }
-          {(status === 'idle') &&
+          {(status === TimerStatus.IDLE) &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-edit'])}
               disabled={isOtherTimerEdited}
@@ -100,7 +101,7 @@ export const Timer = React.memo(function Timer({
               Edit
             </button>
           }
-          {status === 'running' &&
+          {status === TimerStatus.RUNNING &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-pause'])}
               disabled={isOtherTimerEdited}
@@ -109,7 +110,7 @@ export const Timer = React.memo(function Timer({
               Pause
             </button>
           }
-          {status === 'paused' &&
+          {status === TimerStatus.PAUSED &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-resume'])}
               disabled={isOtherTimerEdited}
@@ -118,7 +119,7 @@ export const Timer = React.memo(function Timer({
               Resume
             </button>
           }
-          {status === 'paused' &&
+          {status === TimerStatus.PAUSED &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-stop'])}
               disabled={isOtherTimerEdited}
@@ -127,7 +128,7 @@ export const Timer = React.memo(function Timer({
               Restart
             </button>
           }
-          {(status === 'notifying') &&
+          {(status === TimerStatus.NOTIFYING) &&
             <button
               className={clsx(styles['timer-card-button'], styles['timer-button-notify'])}
               onClick={() => onStopTimer(id)}

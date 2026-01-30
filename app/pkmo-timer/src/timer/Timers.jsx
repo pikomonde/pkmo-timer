@@ -4,6 +4,7 @@ import { newEditingTimer, newTimer, secondsToHMS } from './utils/TimerUtils';
 import { Timer } from './Timer';
 import { TimerCallbackActionsContext } from './TimerContext';
 import { soundManager } from './utils/SoundManager';
+import { TimerStatus } from './constants/TimerConstants';
 
 export const Timers = ({ timers, setTimers }) => {
 
@@ -42,7 +43,7 @@ export const Timers = ({ timers, setTimers }) => {
             ...prev.byId[id],
             name: name.trim() || 'untitled timer',
             totalSeconds: totalSeconds,
-            status: "idle",
+            status: TimerStatus.IDLE,
           }
         },
         editingTimer: newEditingTimer(),
@@ -59,7 +60,7 @@ export const Timers = ({ timers, setTimers }) => {
           ...prev.byId,
           [id]: {
             ...prev.byId[id],
-            status: 'editing',
+            status: TimerStatus.EDITING,
           }
         },
         editingTimer: {
@@ -137,7 +138,7 @@ export const Timers = ({ timers, setTimers }) => {
           ...prev.byId,
           [id]: {
             ...prev.byId[id],
-            status: 'running',
+            status: TimerStatus.RUNNING,
             notifyAt: notifyAt,
             runMiliSecondsLeft: totalMiliSeconds,
           }
@@ -154,7 +155,7 @@ export const Timers = ({ timers, setTimers }) => {
           ...prev.byId,
           [id]: {
             ...prev.byId[id],
-            status: 'paused',
+            status: TimerStatus.PAUSED,
           }
         },
       }
@@ -171,7 +172,7 @@ export const Timers = ({ timers, setTimers }) => {
           ...prev.byId,
           [id]: {
             ...prev.byId[id],
-            status: 'running',
+            status: TimerStatus.RUNNING,
             notifyAt: notifyAt,
             runMiliSecondsLeft: runMiliSecondsLeft,
           }
@@ -189,7 +190,7 @@ export const Timers = ({ timers, setTimers }) => {
           ...prev.byId,
           [id]: {
             ...prev.byId[id],
-            status: 'idle',
+            status: TimerStatus.IDLE,
             notifyAt: 0,
           }
         },
@@ -205,7 +206,7 @@ export const Timers = ({ timers, setTimers }) => {
     <TimerCallbackActionsContext.Provider value={callbackActions}>
       <div className={styles['timers-container']}>
         {timers.allIds.map((id) => {
-          const isEditingThisOne = timers.byId[id].status === 'editing';
+          const isEditingThisOne = timers.byId[id].status === TimerStatus.EDITING;
           const isOtherTimerEdited = timers.editingTimer.isEditing;
           return <Timer
             key={id}
