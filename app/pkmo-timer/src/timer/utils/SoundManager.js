@@ -7,6 +7,7 @@ class SoundManager {
   }
 
   play(id) {
+    // TODO: in extenstion, instead of using new Audio(), we sent to background.js
     if (!this.sounds.get(id)) {
       // const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
       this.sounds.set(id, new Audio(alarmClock90867));
