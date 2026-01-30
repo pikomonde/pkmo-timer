@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Timers.module.css';
-import { newEditingTimer, newTimer, secondsToHMS } from './utils/TimerUtils';
+import { createEditingTimer, createTimer, secondsToHMS } from './utils/TimerUtils';
 import { Timer } from './Timer';
 import { TimerCallbackActionsContext } from './TimerContext';
 import { soundManager } from './utils/SoundManager';
@@ -9,13 +9,13 @@ import { TimerStatus } from './constants/TimerConstants';
 export const Timers = ({ timers, setTimers }) => {
 
   const onCreate = React.useCallback(() => {
-    const timer = newTimer();
+    const timer = createTimer();
     setTimers(prev => {
       return {
         ...prev,
         byId: {...prev.byId, [timer.id]: timer},
         allIds: [...prev.allIds, timer.id],
-        editingTimer: newEditingTimer({ isEditing: true }),
+        editingTimer: createEditingTimer({ isEditing: true }),
       }
     });
   }, [setTimers]);
@@ -46,7 +46,7 @@ export const Timers = ({ timers, setTimers }) => {
             status: TimerStatus.IDLE,
           }
         },
-        editingTimer: newEditingTimer(),
+        editingTimer: createEditingTimer(),
       }
     });
   }, [setTimers]);
@@ -122,7 +122,7 @@ export const Timers = ({ timers, setTimers }) => {
         ...prev,
         byId: {...remainingById},
         allIds: [...newAllIds],
-        editingTimer: newEditingTimer(),
+        editingTimer: createEditingTimer(),
       }
     });
   }, [setTimers]);

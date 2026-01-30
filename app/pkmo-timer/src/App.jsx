@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Timers } from './timer/Timers';
-import { newEditingTimer } from './timer/utils/TimerUtils';
+import { createEditingTimer } from './timer/utils/TimerUtils';
 import { useTimerEngine } from './timer/hook/TimerEngine';
 
 const MS_IN_60_FPS = 1000 / 60;
@@ -43,7 +43,7 @@ function App() {
       },
     },
     allIds: [id1, id2, id3, id4],
-    editingTimer: newEditingTimer(),
+    editingTimer: createEditingTimer(),
   };
 
   const {timers, setTimers} = useTimerEngine(exampleListOfTimers, MS_IN_60_FPS);

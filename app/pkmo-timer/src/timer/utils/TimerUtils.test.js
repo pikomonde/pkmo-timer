@@ -12,9 +12,9 @@ test('conversion from seconds to HMS using secondsToHMS', () => {
   expect(TimerUtils.secondsToHMS(600)).toEqual({ hour: 0, minute: 10, second: 0 });
 });
 
-test('create new timer using newTimer', () => {
+test('create new timer using createTimer', () => {
   // Positive test
-  const timer1 = TimerUtils.newTimer();
+  const timer1 = TimerUtils.createTimer();
   expect(timer1).toEqual({
     id: timer1.id,
     name: '',
@@ -25,7 +25,7 @@ test('create new timer using newTimer', () => {
    });
   
   // case override id
-  const timer2 = TimerUtils.newTimer({ id: 'id-2' });
+  const timer2 = TimerUtils.createTimer({ id: 'id-2' });
   expect(timer2).toEqual({
     id: 'id-2',
     name: '',
@@ -36,7 +36,7 @@ test('create new timer using newTimer', () => {
    });
   
   // case override multiple properties
-  const timer3 = TimerUtils.newTimer({ name: 'name-3', totalSeconds: 1028 });
+  const timer3 = TimerUtils.createTimer({ name: 'name-3', totalSeconds: 1028 });
   expect(timer3).toEqual({
     id: timer3.id,
     name: 'name-3',
@@ -47,9 +47,9 @@ test('create new timer using newTimer', () => {
    });
 });
 
-test('create new editing timer using newEditingTimer', () => {
+test('create new editing timer using createEditingTimer', () => {
   // Positive test
-  expect(TimerUtils.newEditingTimer()).toEqual({
+  expect(TimerUtils.createEditingTimer()).toEqual({
     isEditing: false,
     name: '',
     hour: 0,
@@ -59,7 +59,7 @@ test('create new editing timer using newEditingTimer', () => {
    });
   
   // case override isEditing
-  expect(TimerUtils.newEditingTimer({
+  expect(TimerUtils.createEditingTimer({
     isEditing: true,
   })).toEqual({
     isEditing: true,
@@ -71,7 +71,7 @@ test('create new editing timer using newEditingTimer', () => {
    });
   
   // case override multiple properties
-  expect(TimerUtils.newEditingTimer({
+  expect(TimerUtils.createEditingTimer({
     isEditing: true,
     name: 'untitled timer',
   })).toEqual({

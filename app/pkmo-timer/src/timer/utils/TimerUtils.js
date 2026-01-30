@@ -6,7 +6,7 @@ export const secondsToHMS = (seconds) => ({
   second: seconds % 60,
 });
 
-export const newTimer = (overrides = {}) => ({
+export const createTimer = (overrides = {}) => ({
   id: crypto.randomUUID(),
   name: '',
   totalSeconds: 0, // in seconds
@@ -16,7 +16,7 @@ export const newTimer = (overrides = {}) => ({
   ...overrides,
 });
 
-export const newEditingTimer = (overrides = {}) => ({
+export const createEditingTimer = (overrides = {}) => ({
   isEditing: false,
   name: '',
   hour: 0,
