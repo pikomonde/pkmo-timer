@@ -1,5 +1,5 @@
 import React from 'react';
-import './Timers.css';
+import styles from './Timers.module.css';
 import { newEditingTimer, newTimer, secondsToHMS } from './utils/TimerUtils';
 import { Timer } from './Timer';
 import { TimerCallbackActionsContext } from './TimerContext';
@@ -203,7 +203,7 @@ export const Timers = ({ timers, setTimers }) => {
 
   return (
     <TimerCallbackActionsContext.Provider value={callbackActions}>
-      <div className='timers-container'>
+      <div className={styles['timers-container']}>
         {timers.allIds.map((id) => {
           const isEditingThisOne = timers.byId[id].status === 'editing';
           const isOtherTimerEdited = timers.editingTimer.isEditing;
@@ -216,7 +216,7 @@ export const Timers = ({ timers, setTimers }) => {
           />
         })}
         <button
-          className='timer-button-add'
+          className={styles['timer-button-add']}
           onClick={onCreate}
           disabled={timers.editingTimer.isEditing}
           >Add New Timer</button>
