@@ -24,7 +24,7 @@ A robust, simple countdown timer built with React and focused on clean architect
 
 1. **Clone the repo**
    ```bash
-   git clone [https://github.com/pikomonde/pkmo-timer.git](https://github.com/pikomonde/pkmo-timer.git)
+   git clone https://github.com/pikomonde/pkmo-timer.git
    ```
 2. **Install Dependencies**
    ```bash
