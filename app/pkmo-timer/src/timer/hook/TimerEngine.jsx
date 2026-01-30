@@ -2,9 +2,18 @@ import React from 'react';
 // source: https://pixabay.com/sound-effects/technology-alarm-clock-90867/
 import alarmClock90867Src from '../assets/audio/alarm-clock-90867.mp3';
 
+const LOCAL_STORAGE_SAVE_NAME = 'pkmo_timer';
+
 export const useTimerEngine = (initialState, tickInterval) => {
-  const [timers, setTimers] = React.useState(initialState);
+  const [timers, setTimers] = React.useState(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_SAVE_NAME);
+    return saved ? JSON.parse(saved) : initialState;
+  });
   const audioRefs = React.useRef({});
+
+  React.useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_SAVE_NAME, JSON.stringify(timers));
+  }, [timers]);
 
   React.useEffect(() => {
     const tick = setInterval(() => {
