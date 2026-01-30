@@ -1,6 +1,5 @@
 import React from 'react';
-// source: https://pixabay.com/sound-effects/technology-alarm-clock-90867/
-import alarmClock90867Src from '../assets/audio/alarm-clock-90867.mp3';
+import { soundManager } from '../utils/SoundManager';
 
 const LOCAL_STORAGE_SAVE_NAME = 'pkmo_timer';
 
@@ -34,13 +33,7 @@ export const useTimerEngine = (initialState, tickInterval) => {
                 notifyAt: 0,
                 runMiliSecondsLeft: 0,
               };
-              if (!audioRefs.current[id]) {
-                // const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
-                const alarmSound = new Audio(alarmClock90867Src);
-                alarmSound.loop = true;
-                alarmSound.play().catch((error) => {console.log(`Audio playbak failed: ${error.name} ${error.message}`)});
-                audioRefs.current[id] = alarmSound;
-              }
+              soundManager.play(id);
             } else {
               updatedTimers[id] = {
                 ...timer,

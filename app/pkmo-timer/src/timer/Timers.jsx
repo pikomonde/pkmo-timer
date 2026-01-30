@@ -3,6 +3,7 @@ import './Timers.css';
 import { newEditingTimer, newTimer, secondsToHMS } from './utils/TimerUtils';
 import { Timer } from './Timer';
 import { TimerCallbackActionsContext } from './TimerContext';
+import { soundManager } from './utils/SoundManager';
 
 export const Timers = ({ timers, setTimers, audioRefs }) => {
 
@@ -111,11 +112,7 @@ export const Timers = ({ timers, setTimers, audioRefs }) => {
   }, [setTimers]);
 
   const onDelete = React.useCallback((id) => {
-    if (audioRefs.current[id]) {
-      audioRefs.current[id].pause();
-      audioRefs.current[id].currentTime = 0;
-      delete audioRefs.current[id];
-    }
+    soundManager.stop(id);
     setTimers(prev => {
       const { [id]: _, ...remainingById } = prev.byId;
       const newAllIds = prev.allIds.filter(activeId => activeId !== id);
@@ -184,11 +181,7 @@ export const Timers = ({ timers, setTimers, audioRefs }) => {
   }, [setTimers]);
 
   const onStopTimer = React.useCallback((id) => {
-    if (audioRefs.current[id]) {
-      audioRefs.current[id].pause();
-      audioRefs.current[id].currentTime = 0;
-      delete audioRefs.current[id];
-    }
+    soundManager.stop(id);
     setTimers(prev => {
       return {
         ...prev,
