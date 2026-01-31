@@ -12,9 +12,7 @@ export const WindowWrapper = ({ children }) => {
           </div>
           <div className={styles.title}>PikoMo Multi-Timer CountDown</div>
         </div>
-        <div className={styles.contentWrapper}>
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   );
