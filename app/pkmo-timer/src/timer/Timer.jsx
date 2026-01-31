@@ -31,6 +31,7 @@ export const Timer = React.memo(function Timer({
   return (
     <div className={styles['timer-card']}>
       <input
+        id={React.useId()}
         ref={nameInputRef}
         type='text'
         placeholder='Input timer name'
@@ -41,6 +42,7 @@ export const Timer = React.memo(function Timer({
       <div className={styles['timer-card-controls']}>
         <div className={styles['timer-card-time-group']}>
           <input
+            id={React.useId()}
             type='number'
             className={clsx({ [styles['is-invalid-input']]: editingTimer?.errorMsg })}
             placeholder='Input hours'
@@ -49,6 +51,7 @@ export const Timer = React.memo(function Timer({
             onChange={(event) => onChange(event, 'hour')}
           />
           <input
+            id={React.useId()}
             type='number'
             className={clsx({ [styles['is-invalid-input']]: editingTimer?.errorMsg })}
             placeholder='Input minutes'
@@ -57,6 +60,7 @@ export const Timer = React.memo(function Timer({
             onChange={(event) => onChange(event, 'minute')}
           />
           <input
+            id={React.useId()}
             type='number'
             className={clsx({ [styles['is-invalid-input']]: editingTimer?.errorMsg })}
             placeholder='Input seconds'
