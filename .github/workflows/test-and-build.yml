@@ -1,0 +1,35 @@
+name: Test and Build Logic
+
+on:
+  workflow_call:
+    inputs:
+      use_wrapper:
+        required: false
+        type: string
+        default: 'false'
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app/pkmo-timer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install and Test
+        run: |
+          npm install
+          npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_USE_WINDOW_WRAPPER: ${{ inputs.use_wrapper }}
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: app/pkmo-timer/dist

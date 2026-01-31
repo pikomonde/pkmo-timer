@@ -1,35 +1,29 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   release:
       types: [ published ]
 
 jobs:
-  build-and-deploy:
+  test-and-build:
+    uses: ./.github/workflows/test-and-build.yml
+    with:
+      use_wrapper: 'true'
+  deploy:
+    needs: test-and-build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/pkmo-timer
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install and Test
-        run: |
-          npm install
-          npm test
-
-      - name: Build
-        run: |
-          npm run build
+      
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist-folder
 
       - name: Deploy
-        if: github.event_name == 'release'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: app/pkmo-timer/dist
+          folder: dist-folder
           branch: gh-pages

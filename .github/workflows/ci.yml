@@ -1,0 +1,13 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    uses: ./.github/workflows/test-and-build.yml
+    with:
+      use_wrapper: 'false'
