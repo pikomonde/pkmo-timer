@@ -1,0 +1,35 @@
+:root {
+  /* Brand Colors */
+  --piko-primary: #7C4DFF;
+  --piko-primary-soft: #F3E5F5;
+  --piko-success: #2ECC71;
+  --piko-danger: #FF7675;
+  --piko-warning: #FFEAA7;
+  
+  /* Grayscale / Neutrals */
+  --piko-bg: #F8F9FB;
+  --piko-card: #FFFFFF;
+  --piko-text: #2D3436;
+  --piko-muted: #B2BEC3;
+  --piko-border: #E0E0E0;
+
+  /* Elevation */
+  --piko-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --piko-radius: 2px;
+
+  /* Sizes*/
+  --piko-timers-container-xs: 320px;
+}
+
+#root {
+  width: 100%;
+}
+
+body {
+  background-color: var(--piko-bg);
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--piko-text);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}

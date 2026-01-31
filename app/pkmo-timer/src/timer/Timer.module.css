@@ -97,7 +97,7 @@
 .timer-button-stop  { background: var(--piko-danger); color: white; }
 .timer-button-notify{ background: var(--piko-danger); color: white; }
 
-@media (min-width: 400px) {
+@container timer-container (min-width: 400px) {
   .timer-card-controls {
     flex-direction: row;
     gap: 8px;
@@ -118,7 +118,7 @@
   }
 }
 
-@media (min-width: 640px) {
+@container timer-container (min-width: 640px) {
   .timer-card {
     flex-direction: row;
     align-items: left;

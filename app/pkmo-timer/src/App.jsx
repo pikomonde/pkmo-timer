@@ -1,6 +1,6 @@
-import React from 'react';
-import './App.css';
+import styles from './App.module.css';
 import { Timers } from './timer/Timers';
+import { WindowWrapper } from './WindowWrapper';
 import { createEditingTimer } from './timer/utils/TimerUtils';
 import { useTimerEngine } from './timer/hook/TimerEngine';
 
@@ -47,14 +47,28 @@ function App() {
   };
 
   const {timers, setTimers} = useTimerEngine(exampleListOfTimers, MS_IN_60_FPS);
+  const useWrapper = import.meta.env.VITE_USE_WINDOW_WRAPPER === 'true';
+
+  if (useWrapper) {
+    return (
+      <WindowWrapper>
+        <div className={styles.content}>
+          <Timers
+            timers={timers}
+            setTimers={setTimers}
+          />
+        </div>
+      </WindowWrapper>
+    );
+  }
 
   return (
-    <>
+    <div className={styles.content}>
       <Timers
         timers={timers}
         setTimers={setTimers}
       />
-    </>
+    </div>
   );
 }
  

@@ -1,0 +1,41 @@
+.osWindowContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.osWindow {
+  width: 400px; 
+  height: 500px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  
+  resize: both;
+  min-width: 240px;
+  min-height: 400px;
+}
+
+.titleBar {
+  background: #f0f0f0;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  cursor: grab;
+}
+
+.controls { display: flex; gap: 6px; }
+.controls span {
+  width: 12px; height: 12px; border-radius: 50%;
+}
+.close { background: #ff5f56; }
+.minimize { background: #ffbd2e; }
+.maximize { background: #27c93f; }
+
+.title {
+  flex: 1; text-align: center; font-size: 12px; color: #666;
+}
