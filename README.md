@@ -42,3 +42,15 @@ A robust, simple countdown timer built with React and focused on clean architect
 
 ## 🏗️ Architecture Note
 This project follows a "Logic-UI Separation" pattern. Business logic (conversions, object factories) lives in utils, while React components focus purely on rendering and user interaction.
+
+## ❤️ Support My Work
+
+If this project helped you, consider supporting its development:
+
+| Platform | Link/Address |
+| :--- | :--- |
+| **Global (USD)** | [Support via Ko-fi](https://ko-fi.com/pikomonde) |
+| **USDT (BSC/Base)** | `0xB7Bb8aBC788660B380E6F4E0Be28dd5CB20eC32c` (BEP-20 / Base Network) |
+| **SOL (Solana)** | `HbZ7iYDWL5a19c4Wmkzd4jfp2yU9B6MHfbBJ6tXyn685` |
+
+> *Every coffee fuels more code and better documentation!*
